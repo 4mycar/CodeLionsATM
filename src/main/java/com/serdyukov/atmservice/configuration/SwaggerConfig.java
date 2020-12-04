@@ -42,8 +42,8 @@ public class SwaggerConfig {
 
     private ApiInfo getApiInfo() {
         return new ApiInfo(
-                "CoeLions app",
-                "CoeLions interview app",
+                "CodeLions app",
+                "CodeLions interview app",
                 "1.0",
                 "",
                 "Serdyukov Aleksey",
