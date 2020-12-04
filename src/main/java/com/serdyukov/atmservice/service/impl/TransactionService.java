@@ -10,7 +10,6 @@ import com.serdyukov.atmservice.enums.TransactionType;
 import com.serdyukov.atmservice.exeption.AccountNotFoundException;
 import com.serdyukov.atmservice.exeption.InvalidOperationException;
 import com.serdyukov.atmservice.exeption.NegativeAmountException;
-import com.serdyukov.atmservice.exeption.TransactionNotFoundException;
 import com.serdyukov.atmservice.repository.IAccountRepository;
 import com.serdyukov.atmservice.repository.ICardRepository;
 import com.serdyukov.atmservice.repository.ITransactionRepository;
@@ -49,10 +48,6 @@ public class TransactionService implements ITransactionService {
 
     }
 
-    @Override
-    public TransactionDTO getTransaction(String transactionId) throws InvalidOperationException, TransactionNotFoundException {
-        return null;
-    }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE, rollbackFor = InvalidOperationException.class)
     @Override
