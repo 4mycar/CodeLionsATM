@@ -9,7 +9,7 @@ import java.io.IOException;
 @RestController
 public class HomeController {
     @GetMapping("/")
-    void handleFoo(HttpServletResponse response) throws IOException {
+    void homeRedirect (HttpServletResponse response) throws IOException {
         response.sendRedirect("./swagger-ui/index.html#/");
     }
 }

@@ -1,8 +1,10 @@
 package com.serdyukov.atmservice.configuration;
 
 
+import com.serdyukov.atmservice.security.JwtAuthenticationEntryPoint;
 import com.serdyukov.atmservice.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private JwtAuthenticationEntryPoint unauthorizedHandler;
 
     @Bean
     public JwtAuthenticationFilter jwtTokenFilter() {
@@ -28,6 +32,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -38,7 +44,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/user/auth").permitAll()
                 .antMatchers("/user/reg").permitAll()
-                .antMatchers("/tasks/*").authenticated();
+                .antMatchers("/account/**").authenticated()
+                .and()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
+
 
         http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }

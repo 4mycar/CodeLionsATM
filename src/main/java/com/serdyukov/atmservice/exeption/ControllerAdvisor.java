@@ -22,57 +22,37 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AccountNotFoundException.class)
     public ResponseEntity<Object> handleAccountNotFoundException(
-            AccountNotFoundException e, WebRequest request) {
+            AccountNotFoundException e) {
 
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("message", e.getMessage());
-
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(getExceptionBodyWithMessage(e.getMessage()), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(CardAlreadyExistsExeption.class)
     public ResponseEntity<Object> handleCardAlreadyExistsExeption(
-            CardAlreadyExistsExeption e, WebRequest request) {
+            CardAlreadyExistsExeption e) {
 
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("message", e.getMessage());
-
-        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(getExceptionBodyWithMessage(e.getMessage()), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(AccessDeniedExeption.class)
     public ResponseEntity<Object> handleAccessDeniedExeption(
-            AccessDeniedExeption e, WebRequest request) {
+            AccessDeniedExeption e) {
 
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("message", e.getMessage());
-
-        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(getExceptionBodyWithMessage(e.getMessage()), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(NegativeAmountException.class)
     public ResponseEntity<Object> handleNegativeAmountException(
-            NegativeAmountException e, WebRequest request) {
+            NegativeAmountException e) {
 
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("message", e.getMessage());
-
-        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(getExceptionBodyWithMessage(e.getMessage()), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(JWTValidationExeption.class)
     public ResponseEntity<Object> handleJWTValidationExeption(
-            JWTValidationExeption e, WebRequest request) {
+            JWTValidationExeption e) {
 
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("message", e.getMessage());
-
-        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(getExceptionBodyWithMessage(e.getMessage()), HttpStatus.FORBIDDEN);
     }
 
 
@@ -95,5 +75,12 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         body.put("errors", errors);
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    private Map<String, Object> getExceptionBodyWithMessage(String message) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", message);
+        return body;
     }
 }

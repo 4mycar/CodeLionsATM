@@ -1,0 +1,10 @@
+drop table if exists accounts CASCADE;
+drop table if exists cards CASCADE;
+drop table if exists transactions CASCADE;
+drop sequence if exists hibernate_sequence;
+create sequence hibernate_sequence start with 1 increment by 1;
+create table accounts (id bigint not null, amount double not null, card_id bigint not null, primary key (id));
+create table cards (id bigint not null, pin varchar(255) not null, primary key (id));
+create table transactions (id binary not null, reason varchar(255) not null, timestamp timestamp not null, type varchar(255) not null, value double not null, card_id bigint not null, primary key (id));
+alter table accounts add constraint acc_fk foreign key (card_id) references cards;
+alter table transactions add constraint transactions_fk foreign key (card_id) references cards;

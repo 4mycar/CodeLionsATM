@@ -6,8 +6,10 @@ import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -34,7 +36,8 @@ public class JwtTokenProvider {
             Date date = Date.from(LocalDate.now().plusDays(expirationTime).atStartOfDay(ZoneId.systemDefault()).toInstant());
             return Jwts.builder()
                     .setSubject(card.getId().toString())
-                    .claim(AUTHORITIES, "USER")
+                    .claim(AUTHORITIES, "ROLE_USER")
+                    .setIssuedAt(new Date(System.currentTimeMillis()))
                     .setExpiration(date)
                     .signWith(ALGORITHM_HS512, secretKey)
                     .compact();
@@ -79,5 +82,18 @@ public class JwtTokenProvider {
             return token.substring(7);
         }
         return token;
+    }
+
+    public Long getCardIdFromRequest(HttpServletRequest request) {
+        String token = getTokenFromRequest(request.getHeader(HttpHeaders.AUTHORIZATION));
+        return Long.valueOf(getLoginFromJwt(token));
+    }
+
+    public String getTokenFromRequest(HttpServletRequest request) {
+        String bearer = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (bearer != null && bearer.startsWith("Bearer ")) {
+            return bearer.substring(7);
+        }
+        return bearer;
     }
 }

@@ -6,10 +6,13 @@ import com.serdyukov.atmservice.service.impl.AccountService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -21,12 +24,12 @@ public class AccountController {
 
     @Operation(summary = "Get a balance for account")
     @GetMapping(value = "/account/balance", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccountBalanceDTO> getAccountBalance(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        if (isValidHeader(token)) {
-            Long cardId = Long.valueOf(jwtTokenProvider.getLoginFromJwt(token));
-            return ResponseEntity.ok(accountService.getAmountDTOById(cardId));
-        }
-        return ResponseEntity.badRequest().build();
+    public ResponseEntity<AccountBalanceDTO> getAccountBalance(
+            HttpServletRequest httpServletRequest
+    ) {
+        String token = jwtTokenProvider.getTokenFromRequest(httpServletRequest);
+        Long cardId = Long.valueOf(jwtTokenProvider.getLoginFromJwt(token));
+        return ResponseEntity.of(Optional.of(accountService.getAmountDTOById(cardId)));
 
     }
 
